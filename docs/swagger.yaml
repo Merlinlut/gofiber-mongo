@@ -1,0 +1,628 @@
+basePath: /api
+definitions:
+  model.CreateAlumniRequest:
+    properties:
+      angkatan:
+        type: integer
+      email:
+        type: string
+      ipk:
+        type: number
+      nama:
+        type: string
+      nim:
+        type: string
+      no_hp:
+        type: string
+    type: object
+  model.UpdateAlumniRequest:
+    properties:
+      email:
+        type: string
+      ipk:
+        type: number
+      nama:
+        type: string
+      no_hp:
+        type: string
+    type: object
+  model.CreatePekerjaanRequest:
+    properties:
+      alumni_id:
+        type: string
+      bidang_industri:
+        type: string
+      lokasi_kerja:
+        type: string
+      nama_perusahaan:
+        type: string
+      posisi_jabatan:
+        type: string
+      status_pekerjaan:
+        type: string
+      tanggal_mulai_kerja:
+        type: string
+    type: object
+  model.UpdatePekerjaanRequest:
+    properties:
+      bidang_industri:
+        type: string
+      lokasi_kerja:
+        type: string
+      nama_perusahaan:
+        type: string
+      posisi_jabatan:
+        type: string
+      status_pekerjaan:
+        type: string
+      tanggal_mulai_kerja:
+        type: string
+    type: object
+host: localhost:3000
+info:
+  contact: {}
+  description: API untuk mengelola data alumni dengan MongoDB menggunakan Clean Architecture
+  title: Alumni Management API
+  version: "1.0"
+paths:
+  /alumni:
+    get:
+      parameters:
+      - default: 1
+        name: page
+        in: query
+        type: integer
+      - default: 10
+        name: limit
+        in: query
+        type: integer
+      - default: created_at
+        name: sortBy
+        in: query
+        type: string
+      - default: desc
+        name: order
+        in: query
+        type: string
+      - name: search
+        in: query
+        type: string
+      produces:
+      - application/json
+      security:
+      - BearerAuth: []
+      summary: Get all alumni
+      tags:
+      - Alumni
+      responses:
+        "200":
+          description: alumni list with metadata
+        "500":
+          description: error
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Alumni data
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/model.CreateAlumniRequest'
+      produces:
+      - application/json
+      security:
+      - BearerAuth: []
+      summary: Create new alumni
+      tags:
+      - Alumni
+      responses:
+        "201":
+          description: created alumni
+        "400":
+          description: Request tidak valid
+        "500":
+          description: error
+  /alumni/{id}:
+    get:
+      parameters:
+      - description: Alumni ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      security:
+      - BearerAuth: []
+      summary: Get alumni by ID
+      tags:
+      - Alumni
+      responses:
+        "200":
+          description: alumni data
+        "400":
+          description: ID tidak valid
+        "404":
+          description: Alumni tidak ditemukan
+        "500":
+          description: error
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Alumni ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Alumni data
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/model.UpdateAlumniRequest'
+      produces:
+      - application/json
+      security:
+      - BearerAuth: []
+      summary: Update alumni
+      tags:
+      - Alumni
+      responses:
+        "200":
+          description: updated alumni
+        "400":
+          description: ID tidak valid
+        "500":
+          description: error
+    delete:
+      consumes:
+      - application/json
+      parameters:
+      - description: Alumni ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      security:
+      - BearerAuth: []
+      summary: Soft delete alumni
+      tags:
+      - Alumni
+      responses:
+        "200":
+          description: success response
+        "400":
+          description: ID tidak valid
+        "500":
+          description: error
+  /alumni/tanpa-pekerjaan:
+    get:
+      produces:
+      - application/json
+      security:
+      - BearerAuth: []
+      summary: Get alumni without pekerjaan
+      tags:
+      - Alumni
+      responses:
+        "200":
+          description: alumni list
+        "500":
+          description: error
+  /pekerjaan:
+    get:
+      parameters:
+      - default: 1
+        name: page
+        in: query
+        type: integer
+      - default: 10
+        name: limit
+        in: query
+        type: integer
+      - default: created_at
+        name: sortBy
+        in: query
+        type: string
+      - default: desc
+        name: order
+        in: query
+        type: string
+      - name: search
+        in: query
+        type: string
+      produces:
+      - application/json
+      security:
+      - BearerAuth: []
+      summary: Get all pekerjaan
+      tags:
+      - Pekerjaan
+      responses:
+        "200":
+          description: pekerjaan list with metadata
+        "500":
+          description: error
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Pekerjaan data
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/model.CreatePekerjaanRequest'
+      produces:
+      - application/json
+      security:
+      - BearerAuth: []
+      summary: Create new pekerjaan
+      tags:
+      - Pekerjaan
+      responses:
+        "201":
+          description: created pekerjaan
+        "400":
+          description: Request tidak valid
+        "500":
+          description: error
+  /pekerjaan/{id}:
+    get:
+      parameters:
+      - description: Pekerjaan ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      security:
+      - BearerAuth: []
+      summary: Get pekerjaan by ID
+      tags:
+      - Pekerjaan
+      responses:
+        "200":
+          description: pekerjaan data
+        "400":
+          description: ID tidak valid
+        "404":
+          description: Pekerjaan tidak ditemukan
+        "500":
+          description: error
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Pekerjaan ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Pekerjaan data
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/model.UpdatePekerjaanRequest'
+      produces:
+      - application/json
+      security:
+      - BearerAuth: []
+      summary: Update pekerjaan
+      tags:
+      - Pekerjaan
+      responses:
+        "200":
+          description: updated pekerjaan
+        "400":
+          description: ID tidak valid
+        "500":
+          description: error
+    delete:
+      consumes:
+      - application/json
+      parameters:
+      - description: Pekerjaan ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      security:
+      - BearerAuth: []
+      summary: Soft delete pekerjaan
+      tags:
+      - Pekerjaan
+      responses:
+        "200":
+          description: success response
+        "400":
+          description: ID tidak valid
+        "500":
+          description: error
+  /pekerjaan/alumni/{alumni_id}:
+    get:
+      parameters:
+      - description: Alumni ID
+        in: path
+        name: alumni_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      security:
+      - BearerAuth: []
+      summary: Get pekerjaan by Alumni ID
+      tags:
+      - Pekerjaan
+      responses:
+        "200":
+          description: pekerjaan list
+        "400":
+          description: Alumni ID tidak valid
+        "500":
+          description: error
+  /files/photo/upload:
+    post:
+      consumes:
+      - multipart/form-data
+      parameters:
+      - description: Photo file
+        in: formData
+        name: file
+        required: true
+        type: file
+      - description: Alumni ID
+        in: formData
+        name: alumni_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      security:
+      - BearerAuth: []
+      summary: Upload photo
+      tags:
+      - Files
+      responses:
+        "201":
+          description: upload success
+        "400":
+          description: File atau alumni_id tidak valid
+        "403":
+          description: Permission denied
+        "500":
+          description: error
+  /files/certificate/upload:
+    post:
+      consumes:
+      - multipart/form-data
+      parameters:
+      - description: Certificate file
+        in: formData
+        name: file
+        required: true
+        type: file
+      - description: Alumni ID
+        in: formData
+        name: alumni_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      security:
+      - BearerAuth: []
+      summary: Upload certificate
+      tags:
+      - Files
+      responses:
+        "201":
+          description: upload success
+        "400":
+          description: File atau alumni_id tidak valid
+        "403":
+          description: Permission denied
+        "500":
+          description: error
+  /files/photo/{alumni_id}:
+    get:
+      parameters:
+      - description: Alumni ID
+        in: path
+        name: alumni_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      security:
+      - BearerAuth: []
+      summary: Get photo by Alumni ID
+      tags:
+      - Files
+      responses:
+        "200":
+          description: photo data
+        "404":
+          description: Foto tidak ditemukan
+        "500":
+          description: error
+  /files/certificate/{alumni_id}:
+    get:
+      parameters:
+      - description: Alumni ID
+        in: path
+        name: alumni_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      security:
+      - BearerAuth: []
+      summary: Get certificate by Alumni ID
+      tags:
+      - Files
+      responses:
+        "200":
+          description: certificate data
+        "404":
+          description: Sertifikat tidak ditemukan
+        "500":
+          description: error
+  /files/photo/{id}:
+    delete:
+      consumes:
+      - application/json
+      parameters:
+      - description: Photo ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      security:
+      - BearerAuth: []
+      summary: Delete photo
+      tags:
+      - Files
+      responses:
+        "200":
+          description: success response
+        "403":
+          description: Permission denied
+        "404":
+          description: Foto tidak ditemukan
+        "500":
+          description: error
+  /files/certificate/{id}:
+    delete:
+      consumes:
+      - application/json
+      parameters:
+      - description: Certificate ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      security:
+      - BearerAuth: []
+      summary: Delete certificate
+      tags:
+      - Files
+      responses:
+        "200":
+          description: success response
+        "403":
+          description: Permission denied
+        "404":
+          description: Sertifikat tidak ditemukan
+        "500":
+          description: error
+  /users/{id}:
+    delete:
+      consumes:
+      - application/json
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      security:
+      - BearerAuth: []
+      summary: Soft delete user
+      tags:
+      - Users
+      responses:
+        "200":
+          description: success response
+        "400":
+          description: ID tidak valid
+        "500":
+          description: error
+  /trash/pekerjaan:
+    get:
+      produces:
+      - application/json
+      security:
+      - BearerAuth: []
+      summary: Get trashed pekerjaan
+      tags:
+      - Pekerjaan
+      responses:
+        "200":
+          description: trashed data list
+        "500":
+          description: error
+  /trash/pekerjaan/{id}/restore:
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Pekerjaan ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      security:
+      - BearerAuth: []
+      summary: Restore pekerjaan dari trash
+      tags:
+      - Pekerjaan
+      responses:
+        "200":
+          description: success response
+        "400":
+          description: ID tidak valid
+        "404":
+          description: Data tidak ditemukan
+        "500":
+          description: error
+  /trash/pekerjaan/{id}/permanent:
+    delete:
+      consumes:
+      - application/json
+      parameters:
+      - description: Pekerjaan ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      security:
+      - BearerAuth: []
+      summary: Hard delete pekerjaan secara permanent
+      tags:
+      - Pekerjaan
+      responses:
+        "200":
+          description: success response
+        "400":
+          description: ID tidak valid
+        "404":
+          description: Data tidak ditemukan
+        "500":
+          description: error
+schemes:
+- http
+securityDefinitions:
+  BearerAuth:
+    description: Type "Bearer" followed by a space and JWT token.
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
